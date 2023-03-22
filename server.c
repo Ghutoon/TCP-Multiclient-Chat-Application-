@@ -12,6 +12,7 @@ int client_fd_map[10] = {-1};
 void *routine(void *client_socket_fd);
 int main()
 {
+    //Creating server side socket.
     int server_socket = socket(AF_INET, SOCK_STREAM, 0);
 
     struct sockaddr_in server_address;
@@ -20,6 +21,7 @@ int main()
     server_address.sin_port = htons(8080);
     server_address.sin_addr.s_addr = htonl(INADDR_ANY);
 
+    //Binding server socket to port 8080.
     int ret = bind(server_socket, (struct sockaddr *)&server_address, sizeof(server_address));
 
     if (ret < 0)
@@ -37,11 +39,15 @@ int main()
     pthread_t threads[10];
     int cnt = 0;
 
+    //While there is a connection request from a client do the following/
     while (client_socket = accept(server_socket, NULL, NULL))
     {
+        //Mapping the client_socket file descriptors to array indeces to identify the client.
         client_fd_map[cnt] = client_socket;
 
         printf("%d     %d\n", cnt, client_fd_map[cnt]);
+
+        //Each thread handles the communication channel between a client and the server.
         pthread_create(&threads[cnt], NULL, &routine, (void *)&client_socket);
         cnt++;
     }
@@ -56,6 +62,7 @@ int main()
     return 0;
 }
 
+//Communication protocol
 void *routine(void *client_socket_fd)
 {
     int client_sock = *((int *)client_socket_fd);
