@@ -20,7 +20,7 @@ int main()
 
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(8080);
-    server_address.sin_addr.s_addr = inet_addr("192.168.4.29/22");
+    server_address.sin_addr.s_addr = htonl(INADDR_ANY);
 
     int ret = connect(client_socket_fd, (struct sockaddr *)&server_address, sizeof(server_address));
 
