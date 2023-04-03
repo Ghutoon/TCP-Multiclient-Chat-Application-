@@ -76,15 +76,7 @@ void *routine(void *client_socket_fd)
             pthread_exit(NULL);
         }
         printf("%s\n", buffer);
-
         int destination_socket_fd = client_fd_map[buffer[0] - 48];
-
-        if(destination_socket_fd == -1)
-        {
-            char message[256] = "Receiver not found.";
-            send(client_sock, message, sizeof(message), 0);
-            continue;
-        }
         send(destination_socket_fd, buffer, sizeof(buffer), 0);
     }
 

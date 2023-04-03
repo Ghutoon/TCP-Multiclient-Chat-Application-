@@ -20,7 +20,7 @@ int main()
 
     server_address.sin_family = AF_INET;
     server_address.sin_port = htons(8080);
-    server_address.sin_addr.s_addr = htonl(INADDR_ANY);
+    server_address.sin_addr.s_addr = inet_addr("192.168.4.29/22");
 
     int ret = connect(client_socket_fd, (struct sockaddr *)&server_address, sizeof(server_address));
 
@@ -59,7 +59,7 @@ void *send_channel(void *client_socket_fd)
             printf("Could not send message.\n");
         }
 
-        if(strcmp(buffer, "bye") == 0)
+        if (strcmp(buffer, "bye") == 0)
         {
             exit(0);
         }
@@ -68,18 +68,18 @@ void *send_channel(void *client_socket_fd)
 
 void *receive_channel(void *client_socket_fd)
 {
-    while (1)
-    {
-        int fd = *((int *)client_socket_fd);
+    int fd = *((int *)client_socket_fd);
 
-        char buffer1[1024];
-        int ret = recv(fd, buffer1, sizeof(buffer1), 0);
+    char buffer1[1024];
+    int ret;
+    while (ret = recv(fd, buffer1, sizeof(buffer1), 0))
+    {
 
         if (ret < 0)
         {
             printf("Could not recieve message.\n");
         }
-
-        printf("%s\n", buffer1);
+        else
+            printf("%s\n", buffer1);
     }
 }
